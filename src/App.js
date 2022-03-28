@@ -67,8 +67,16 @@ const App = () => {
   };
 
   const selectAnswer = (artifacts) => {
-    const answer = artifacts[Math.floor(Math.random() * NUMBER_OF_OPTIONS)];
-    return answer;
+    const answerList = [];
+    for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
+      const answer =
+        artifacts[i][Math.floor(Math.random() * NUMBER_OF_OPTIONS)];
+      if (!answerList.includes(answer)) {
+        answerList.push(answer);
+      }
+    }
+    console.log(answerList);
+    return answerList;
   };
 
   useEffect(() => {
