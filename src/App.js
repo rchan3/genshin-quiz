@@ -80,23 +80,27 @@ const App = () => {
 
   const renderQuiz = (artifacts, answer) => {
     const quiz = [];
-    console.log(ARTIFACT_FIELDS.FOUR_PIECE);
-    if (answer === undefined) {
-    } else {
-      console.log(answer);
-      for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
+
+    for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
+      if (answer[i] === undefined || artifacts[i] === undefined) {
+      } else {
+        console.log(artifacts[i]);
         const quizContent = (
-          <p>
-            which artifact has this set effect:
-            {answer[i].name}
-          </p>
+          <div>
+            <p>
+              which artifact has this set effect:
+              {answer[i][ARTIFACT_FIELDS.FOUR_PIECE]}
+            </p>
+            {artifacts[i].map((artName, x) => {
+              return <p key={x}>{artName.name}</p>;
+            })}
+          </div>
         );
 
         quiz.push(quizContent);
       }
-
-      return quiz;
     }
+    return quiz;
   };
 
   useEffect(() => {
@@ -113,15 +117,6 @@ const App = () => {
     };
     start();
   }, [apiResponse]);
-
-  // const quizOptions = () => {
-  //   const artList = [];
-  //   artifacts.forEach((art) => {
-  //     const artName = <p>{art.name}</p>;
-  //     artList.push(artName);
-  //   });
-  //   return artList;
-  // };
 
   return (
     <div className="App">
