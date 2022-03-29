@@ -51,6 +51,7 @@ const App = () => {
       }
 
       const randoQuiz = [];
+
       for (let x = 0; x < NUMBER_OF_OPTIONS; x++) {
         const res = await fetch(
           `https://api.genshin.dev/artifacts/${apiResponse[randoSelect[x]]}`,
@@ -62,7 +63,6 @@ const App = () => {
       }
       quizList.push(randoQuiz);
     }
-    console.log(quizList);
     return quizList;
   };
 
@@ -75,8 +75,28 @@ const App = () => {
         answerList.push(answer);
       }
     }
-    console.log(answerList);
     return answerList;
+  };
+
+  const renderQuiz = (artifacts, answer) => {
+    const quiz = [];
+    console.log(ARTIFACT_FIELDS.FOUR_PIECE);
+    if (answer === undefined) {
+    } else {
+      console.log(answer);
+      for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
+        const quizContent = (
+          <p>
+            which artifact has this set effect:
+            {answer[i].name}
+          </p>
+        );
+
+        quiz.push(quizContent);
+      }
+
+      return quiz;
+    }
   };
 
   useEffect(() => {
@@ -88,29 +108,25 @@ const App = () => {
         const answer = selectAnswer(artifacts);
         setArtifacts(artifacts);
         setAnswer(answer);
+        renderQuiz(artifacts, answer);
       }
     };
     start();
   }, [apiResponse]);
-  // console.log(artifacts);
 
-  const quizOptions = () => {
-    const artList = [];
-    artifacts.forEach((art) => {
-      const artName = <p>{art.name}</p>;
-      artList.push(artName);
-    });
-    return artList;
-  };
+  // const quizOptions = () => {
+  //   const artList = [];
+  //   artifacts.forEach((art) => {
+  //     const artName = <p>{art.name}</p>;
+  //     artList.push(artName);
+  //   });
+  //   return artList;
+  // };
 
   return (
     <div className="App">
       <header className="App-header">genshin artifact quiz</header>
-      {/* <p>
-        {`Which artifact has this set effect: 
-        ${artifacts.length > 0 ? answer[ARTIFACT_FIELDS.FOUR_PIECE] : ""}`}
-      </p>
-      <div>{artifacts.length > 0 ? quizOptions() : ""}</div> */}
+      {artifacts.length > 0 ? renderQuiz(artifacts, answer) : ""}
     </div>
   );
 };
