@@ -21,6 +21,20 @@ const App = () => {
   const [apiResponse, setApiResponse] = useState([]);
   const [artifacts, setArtifacts] = useState([]);
   const [answer, setAnswer] = useState([]);
+  const [userAnswer, setUserAnswer] = useState([]);
+  const [userScore, setUserScore] = useState(-1);
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    let correctAnswer = 0;
+    answer.forEach((ans, index) => {
+      if (ans.name === userAnswer[index]) {
+        correctAnswer++;
+      }
+    });
+    setUserScore(correctAnswer);
+  };
 
   const callArtifactsAPI = async () => {
     const res = await fetch("https://api.genshin.dev/artifacts", {
@@ -63,36 +77,65 @@ const App = () => {
       }
       quizList.push(randoQuiz);
     }
+
     return quizList;
+  };
+
+  const generateAnswer = (artifacts, index, existingAnswers) => {
+    const answer =
+      artifacts[index][Math.floor(Math.random() * NUMBER_OF_OPTIONS)];
+    if (!existingAnswers.some((element) => element.name === answer.name)) {
+      existingAnswers.push(answer);
+    } else {
+      generateAnswer(artifacts, index, existingAnswers);
+    }
   };
 
   const selectAnswer = (artifacts) => {
     const answerList = [];
     for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
-      const answer =
-        artifacts[i][Math.floor(Math.random() * NUMBER_OF_OPTIONS)];
-      if (!answerList.includes(answer)) {
-        answerList.push(answer);
-      }
+      generateAnswer(artifacts, i, answerList);
     }
     return answerList;
+  };
+
+  const onUserAnswerSelect = (event, index) => {
+    const userAnswersCopy = [...userAnswer];
+    userAnswersCopy[index] = event.target.value;
+
+    setUserAnswer(userAnswersCopy);
+  };
+
+  const resetUserScore = () => {
+    setUserScore(-1);
+    document.getElementById("reset-button").reset();
   };
 
   const renderQuiz = (artifacts, answer) => {
     const quiz = [];
 
     for (let i = 0; i < NUMBER_OF_QUESTIONS; i++) {
-      if (answer[i] === undefined || artifacts[i] === undefined) {
-      } else {
-        console.log(artifacts[i]);
+      if (answer[i]) {
         const quizContent = (
-          <div>
+          <div className={`question ${i}`}>
+            <h3>{`Question ${i + 1}`}</h3>
             <p>
-              which artifact has this set effect:
-              {answer[i][ARTIFACT_FIELDS.FOUR_PIECE]}
+              {`Which artifact has the following 4-piece set effect: 
+              ${answer[i][ARTIFACT_FIELDS.FOUR_PIECE]}`}
             </p>
-            {artifacts[i].map((artName, x) => {
-              return <p key={x}>{artName.name}</p>;
+            {artifacts[i].map((artName, index) => {
+              return (
+                <label key={index}>
+                  <input
+                    type="radio"
+                    value={artName.name}
+                    name={`question ${i}`}
+                    onChange={(e) => onUserAnswerSelect(e, i)}
+                    required={index === 0}
+                  />
+                  {artName.name}
+                </label>
+              );
             })}
           </div>
         );
@@ -120,8 +163,30 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">genshin artifact quiz</header>
-      {artifacts.length > 0 ? renderQuiz(artifacts, answer) : ""}
+      <header className="App-header">
+        <h1>genshin artifact quiz</h1>
+      </header>
+      <form onSubmit={handleSubmit}>
+        {artifacts.length > 0
+          ? answer.length > 0
+            ? renderQuiz(artifacts, answer)
+            : ""
+          : ""}
+        {userScore === -1 ? (
+          <>
+            <input type="submit" value="Submit" />
+            <input type="reset" name="reset" />
+          </>
+        ) : (
+          <input
+            type="reset"
+            name="reset"
+            id="reset-button"
+            onClick={resetUserScore}
+          />
+        )}
+      </form>
+      {userScore === -1 ? "" : `Score :${userScore}/${NUMBER_OF_QUESTIONS}`}
     </div>
   );
 };
