@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import Login from "./components/LogIn";
 
 const EXCLUDED_ARTIFACTS = [
   "prayers-for-illumination",
@@ -23,6 +24,7 @@ const App = () => {
   const [answer, setAnswer] = useState([]);
   const [userAnswer, setUserAnswer] = useState([]);
   const [userScore, setUserScore] = useState(-1);
+  const [user, setUser] = useState(null);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -164,8 +166,9 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>genshin artifact quiz</h1>
+        {!user ? <Login user={user} /> : <></>}
       </header>
+      <h1>genshin artifact quiz</h1>
       <form onSubmit={handleSubmit}>
         {artifacts.length > 0
           ? answer.length > 0
