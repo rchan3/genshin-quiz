@@ -5,7 +5,7 @@ const Login = (props) => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(undefined);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const getUser = async (user, pass) => {
     const res = await fetch(
@@ -24,10 +24,16 @@ const Login = (props) => {
   };
 
   const wrongUserOrPassword = () => {
-    if (isLoggedIn === false) {
+    if (isLoggedIn === undefined) {
       return (
         <div>
-          <p>the username or password is incorrect</p>
+          <p>wrong username</p>
+        </div>
+      );
+    } else if (isLoggedIn === false) {
+      return (
+        <div>
+          <p>wrong password</p>
         </div>
       );
     } else {
