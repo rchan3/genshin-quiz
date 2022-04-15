@@ -45,6 +45,7 @@ const Login = (props) => {
     return (
       <div>
         <p>{`currently logged in as ${username}`}</p>
+        <button onClick={setIsLoggedIn(false)}>sign out</button>
       </div>
     );
   } else {
