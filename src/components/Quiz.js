@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Login from "./LogIn";
 
 const Quiz = (props) => {
   const [apiResponse, setApiResponse] = useState([]);
@@ -162,7 +163,9 @@ const Quiz = (props) => {
 
   return (
     <div className="App">
+      <header className="App-header">{<Login />}</header>
       <h1>genshin artifact quiz</h1>
+
       <form onSubmit={handleSubmit}>
         {artifacts.length > 0
           ? answer.length > 0

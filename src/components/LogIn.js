@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Login.css";
 
 const Login = (props) => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const getUser = async (user, pass) => {
@@ -13,9 +13,9 @@ const Login = (props) => {
       { method: "GET" }
     );
 
-    const jsonData = await res.json();
-    console.log(jsonData.loggedIn);
-    setIsLoggedIn(jsonData.loggedIn);
+    const jsonLoggedIn = await res.json();
+
+    setIsLoggedIn(jsonLoggedIn.loggedIn);
   };
 
   const handleLogin = (i) => {
@@ -45,7 +45,13 @@ const Login = (props) => {
     return (
       <div>
         <p>{`currently logged in as ${username}`}</p>
-        <button onClick={setIsLoggedIn(false)}>sign out</button>
+        <button
+          onClick={() => {
+            setIsLoggedIn(null);
+          }}
+        >
+          log out
+        </button>
       </div>
     );
   } else {
@@ -70,6 +76,9 @@ const Login = (props) => {
           </label>
           <input type="submit" value="submit" />
         </form>
+        <Link to="signup" className="signup">
+          sign up
+        </Link>
         {wrongUserOrPassword()}
       </div>
     );

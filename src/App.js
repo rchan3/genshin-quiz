@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
 import QuizComponent from "./components/Quiz";
-import LoginComponent from "./components/LogIn";
+import Signup from "./components/Signup";
 
 const App = (props) => {
   return (
     <Routes>
       <Route path="/" element={<Quiz />} />
+      <Route path="signup" element={<Signup />} />
     </Routes>
   );
 };
@@ -16,7 +17,6 @@ const App = (props) => {
 const Quiz = (props) => {
   return (
     <>
-      <header className="App-header">{<LoginComponent />}</header>
       <QuizComponent />
     </>
   );
